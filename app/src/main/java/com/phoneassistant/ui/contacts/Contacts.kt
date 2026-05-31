@@ -1,0 +1,122 @@
+package com.phoneassistant.ui.contacts
+
+import android.app.Application
+import android.os.Bundle
+import android.view.*
+import android.widget.*
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.*
+import androidx.recyclerview.widget.*
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.phoneassistant.MainActivity
+import com.phoneassistant.data.*
+import com.phoneassistant.databinding.*
+import kotlinx.coroutines.launch
+
+// ── Contacts ──────────────────────────────────────────────────────────────────
+
+class ContactsViewModel(app: Application) : AndroidViewModel(app) {
+    private val repo = ContactsRepo(app)
+    private var all = listOf<Contact>()
+    private val _list = MutableLiveData<List<Contact>>()
+    val list: LiveData<List<Contact>> = _list
+    val loading = MutableLiveData(false)
+    fun load() = viewModelScope.launch { loading.value = true; all = repo.getAll(); _list.value = all; loading.value = false }
+    fun search(q: String) { _list.value = if (q.isBlank()) all else { val lq = q.lowercase(); all.filter { c -> c.name.lowercase().contains(lq) || c.phones.any { it.number.contains(lq) } } } }
+}
+
+private val palette = listOf(0xFF1976D2,0xFF388E3C,0xFFD32F2F,0xFF7B1FA2,0xFFF57C00,0xFF0288D1,0xFF00796B).map{it.toInt()}
+
+class ContactsAdapter(private val onCall: (Contact) -> Unit, private val onClick: (Contact) -> Unit)
+    : ListAdapter<Contact, ContactsAdapter.VH>(object : DiffUtil.ItemCallback<Contact>() {
+    override fun areItemsTheSame(a: Contact, b: Contact) = a.id == b.id
+    override fun areContentsTheSame(a: Contact, b: Contact) = a == b
+}) {
+    inner class VH(private val b: ItemContactBinding) : RecyclerView.ViewHolder(b.root) {
+        fun bind(c: Contact) {
+            b.tvName.text = c.name
+            b.tvNumber.text = c.phones.firstOrNull()?.let { "${it.number} • ${it.type}" } ?: ""
+            b.tvInitials.text = c.name.split(" ").mapNotNull { it.firstOrNull()?.toString() }.take(2).joinToString("").uppercase()
+            b.avatarBg.setBackgroundColor(palette[(c.name.firstOrNull()?.code ?: 0) % palette.size])
+            b.ivStar.visibility = if (c.isFavorite) View.VISIBLE else View.GONE
+            b.btnCall.setOnClickListener { onCall(c) }
+            b.root.setOnClickListener { onClick(c) }
+        }
+    }
+    override fun onCreateViewHolder(p: ViewGroup, t: Int) = VH(ItemContactBinding.inflate(LayoutInflater.from(p.context), p, false))
+    override fun onBindViewHolder(h: VH, pos: Int) = h.bind(getItem(pos))
+}
+
+class ContactsFragment : Fragment() {
+    private var _b: FragmentContactsBinding? = null
+    private val b get() = _b!!
+    private val vm: ContactsViewModel by viewModels()
+    override fun onCreateView(i: LayoutInflater, c: ViewGroup?, s: Bundle?): View { _b = FragmentContactsBinding.inflate(i, c, false); return b.root }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        val adapter = ContactsAdapter(
+            onCall = { c -> c.phones.firstOrNull()?.let { (activity as? MainActivity)?.call(it.number) } },
+            onClick = { c ->
+                ContactDetailFragment().apply { arguments = Bundle().apply { putLong("id", c.id) } }
+                    .also { parentFragmentManager.beginTransaction().replace(id, it).addToBackStack(null).commit() }
+            }
+        )
+        b.rv.layoutManager = LinearLayoutManager(requireContext()); b.rv.adapter = adapter
+        b.search.setOnQueryTextListener(object : androidx.appcompat.widget.SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(q: String?) = false
+            override fun onQueryTextChange(q: String?): Boolean { vm.search(q ?: ""); return true }
+        })
+        vm.list.observe(viewLifecycleOwner) { adapter.submitList(it); b.tvCount.text = "${it.size} contact${if(it.size>1)"s" else ""}"; b.tvEmpty.visibility = if (it.isEmpty()) View.VISIBLE else View.GONE }
+        vm.loading.observe(viewLifecycleOwner) { b.progress.visibility = if (it) View.VISIBLE else View.GONE }
+        vm.load()
+    }
+    override fun onDestroyView() { super.onDestroyView(); _b = null }
+}
+
+// ── Contact Detail ─────────────────────────────────────────────────────────
+
+class ContactDetailViewModel(app: Application) : AndroidViewModel(app) {
+    private val repo = ContactsRepo(app); private val callerRepo = CallerIdRepo(app); private val storage = AppStorage(app)
+    val contact = MutableLiveData<Contact?>(); val callerInfo = MutableLiveData<String?>()
+    val note = MutableLiveData(""); val isFav = MutableLiveData(false); val isBlocked = MutableLiveData(false)
+    fun load(id: Long) = viewModelScope.launch {
+        val c = repo.getAll().find { it.id == id }; contact.value = c
+        note.value = storage.getNote(id); isFav.value = storage.isFavorite(id)
+        c?.phones?.firstOrNull()?.let { p ->
+            isBlocked.value = storage.isBlocked(p.number)
+            callerInfo.value = callerRepo.identify(p.number)?.let { i ->
+                listOfNotNull(i.carrier?.let{"📡 $it"}, i.lineType, i.location?.let{"📍 $it"}, if(i.isSpam)"⚠️ SPAM" else null).joinToString("\n").takeIf{it.isNotBlank()}
+            }
+        }
+    }
+    fun saveNote(id: Long, text: String) = viewModelScope.launch { storage.saveNote(id, text); note.value = text }
+    fun toggleFav(id: Long) = viewModelScope.launch { if(isFav.value==true){storage.removeFavorite(id);isFav.value=false}else{storage.addFavorite(id);isFav.value=true} }
+    fun toggleBlock(number: String) = viewModelScope.launch { if(isBlocked.value==true){storage.unblockNumber(number);isBlocked.value=false}else{storage.blockNumber(number);isBlocked.value=true} }
+}
+
+class ContactDetailFragment : Fragment() {
+    private var _b: FragmentDetailBinding? = null; private val b get() = _b!!; private val vm: ContactDetailViewModel by viewModels()
+    override fun onCreateView(i: LayoutInflater, c: ViewGroup?, s: Bundle?): View { _b = FragmentDetailBinding.inflate(i, c, false); return b.root }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        val id = arguments?.getLong("id") ?: return; vm.load(id)
+        vm.contact.observe(viewLifecycleOwner) { c -> c ?: return@observe
+            b.tvName.text = c.name
+            b.tvInitials.text = c.name.split(" ").mapNotNull{it.firstOrNull()?.toString()}.take(2).joinToString("").uppercase()
+            b.chipGroup.removeAllViews()
+            c.phones.forEach { p -> b.chipGroup.addView(com.google.android.material.chip.Chip(requireContext()).apply { text="${p.number} (${p.type})"; setOnClickListener{(activity as? MainActivity)?.call(p.number)} }) }
+        }
+        vm.callerInfo.observe(viewLifecycleOwner) { b.cardCallerInfo.visibility = if(it!=null) View.VISIBLE else View.GONE; b.tvCallerInfo.text = it }
+        vm.note.observe(viewLifecycleOwner) { b.etNote.setText(it) }
+        vm.isFav.observe(viewLifecycleOwner) { b.btnFav.text = if(it) "★ Retirer des favoris" else "☆ Ajouter aux favoris" }
+        vm.isBlocked.observe(viewLifecycleOwner) { b.btnBlock.text = if(it) "✅ Débloquer" else "🚫 Bloquer ce numéro" }
+        b.btnSaveNote.setOnClickListener { vm.saveNote(id, b.etNote.text.toString()); Toast.makeText(requireContext(),"Note sauvegardée ✓",Toast.LENGTH_SHORT).show() }
+        b.btnFav.setOnClickListener { vm.toggleFav(id) }
+        b.btnBlock.setOnClickListener {
+            val number = vm.contact.value?.phones?.firstOrNull()?.number ?: return@setOnClickListener
+            MaterialAlertDialogBuilder(requireContext()).setTitle(if(vm.isBlocked.value==true)"Débloquer ?" else "Bloquer ?").setMessage(number).setPositiveButton("Confirmer"){_,_->vm.toggleBlock(number)}.setNegativeButton("Annuler",null).show()
+        }
+    }
+    override fun onDestroyView() { super.onDestroyView(); _b = null }
+}

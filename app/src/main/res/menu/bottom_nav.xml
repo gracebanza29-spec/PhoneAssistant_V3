@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/recentsFragment"  android:title="Recents"  android:icon="@android:drawable/ic_menu_recent_history"/>
+    <item android:id="@+id/contactsFragment" android:title="Contacts" android:icon="@android:drawable/ic_menu_myplaces"/>
+    <item android:id="@+id/dialpadFragment"  android:title="Clavier"  android:icon="@android:drawable/ic_menu_call"/>
+    <item android:id="@+id/blockedFragment"  android:title="Bloques"  android:icon="@android:drawable/ic_delete"/>
+</menu>

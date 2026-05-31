@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/nav_graph" app:startDestination="@id/dialpadFragment">
+    <fragment android:id="@+id/dialpadFragment" android:name="com.phoneassistant.ui.dialpad.DialpadFragment" android:label="Clavier">
+        <argument android:name="prefill" app:argType="string" android:defaultValue=""/>
+    </fragment>
+    <fragment android:id="@+id/recentsFragment" android:name="com.phoneassistant.ui.recents.RecentsFragment" android:label="Recents"/>
+    <fragment android:id="@+id/contactsFragment" android:name="com.phoneassistant.ui.contacts.ContactsFragment" android:label="Contacts"/>
+    <fragment android:id="@+id/blockedFragment" android:name="com.phoneassistant.ui.blocked.BlockedFragment" android:label="Bloques"/>
+</navigation>
