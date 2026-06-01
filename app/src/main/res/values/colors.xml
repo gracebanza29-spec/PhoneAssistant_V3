@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- ── One UI — palette claire ───────────────────────────────────────── -->
+    <color name="brand_primary">#0B66FF</color>
+    <color name="on_primary">#FFFFFF</color>
+    <color name="primary_container">#DCE7FF</color>
+    <color name="on_primary_container">#001A41</color>
+
+    <color name="secondary">#3E5A8E</color>
+    <color name="on_secondary">#FFFFFF</color>
+    <color name="secondary_container">#D8E2FF</color>
+    <color name="on_secondary_container">#001A41</color>
+
+    <color name="background">#FAFAFA</color>
+    <color name="on_background">#1A1C1E</color>
+    <color name="surface">#FFFFFF</color>
+    <color name="on_surface">#1A1C1E</color>
+    <color name="surface_variant">#F0F1F3</color>
+    <color name="on_surface_variant">#5A5E66</color>
+    <color name="surface_container">#F4F5F7</color>
+    <color name="surface_container_high">#EDEEF1</color>
+
+    <color name="outline">#C4C7CE</color>
+    <color name="outline_variant">#E2E4E9</color>
+
+    <color name="error">#E5484D</color>
+    <color name="on_error">#FFFFFF</color>
+
+    <!-- ── Couleurs sémantiques des types d'appel (identiques clair/sombre) ── -->
+    <color name="call_incoming">#1FAA59</color>
+    <color name="call_outgoing">#2D7FF9</color>
+    <color name="call_missed">#E5484D</color>
+    <color name="call_rejected">#E5484D</color>
+    <color name="call_blocked">#9AA0A6</color>
+
+    <color name="call_incoming_container">#D7F2E3</color>
+    <color name="call_outgoing_container">#DCEBFF</color>
+    <color name="call_missed_container">#FDE0E1</color>
+    <color name="call_blocked_container">#ECEDEF</color>
+
+    <!-- ── Palette d'avatars (initiales sur fond coloré) ─────────────────── -->
+    <color name="avatar_0">#1565C0</color>
+    <color name="avatar_1">#2E7D32</color>
+    <color name="avatar_2">#C62828</color>
+    <color name="avatar_3">#6A1B9A</color>
+    <color name="avatar_4">#EF6C00</color>
+    <color name="avatar_5">#00838F</color>
+    <color name="avatar_6">#AD1457</color>
+    <color name="avatar_7">#4527A0</color>
+</resources>

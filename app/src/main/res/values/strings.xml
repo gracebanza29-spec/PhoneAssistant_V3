@@ -1,4 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Phone Assistant</string>
+
+    <!-- Onglets -->
+    <string name="tab_recents">Récents</string>
+    <string name="tab_contacts">Contacts</string>
+    <string name="tab_dialpad">Clavier</string>
+    <string name="tab_blocked">Bloqués</string>
+
+    <!-- Récents -->
+    <string name="filter_all">Tous</string>
+    <string name="filter_missed">Manqués</string>
+    <string name="filter_incoming">Reçus</string>
+    <string name="filter_outgoing">Émis</string>
+    <string name="empty_recents">Aucun appel récent</string>
+
+    <!-- Contacts -->
+    <string name="search_contacts">Rechercher un contact</string>
+    <string name="empty_contacts">Aucun contact</string>
+
+    <!-- Clavier -->
+    <string name="dial_hint">Entrer un numéro</string>
+
+    <!-- Bloqués -->
+    <string name="empty_blocked">Aucun numéro bloqué</string>
+    <string name="block_a_number">Bloquer un numéro</string>
+    <string name="unblock_a_number">Débloquer un numéro</string>
+
+    <!-- Détail -->
+    <string name="note_hint">Note sur ce contact</string>
+    <string name="save_note">Enregistrer la note</string>
+    <string name="add_favorite">Ajouter aux favoris</string>
+    <string name="remove_favorite">Retirer des favoris</string>
+    <string name="block_number">Bloquer ce numéro</string>
+    <string name="unblock_number">Débloquer</string>
+    <string name="identified_info">Informations identifiées</string>
+
+    <!-- Actions / contenu -->
+    <string name="action_call">Appeler</string>
+    <string name="action_sms">Envoyer un SMS</string>
+    <string name="action_delete">Supprimer</string>
+    <string name="action_backspace">Effacer</string>
+    <string name="action_add_contact">Ajouter aux contacts</string>
+    <string name="cd_avatar">Avatar du contact</string>
+    <string name="cd_favorite">Favori</string>
 </resources>

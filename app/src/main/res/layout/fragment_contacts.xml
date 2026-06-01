@@ -1,11 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical">
-    <com.google.android.material.appbar.MaterialToolbar android:layout_width="match_parent" android:layout_height="?attr/actionBarSize" app:title="Contacts"/>
-    <androidx.appcompat.widget.SearchView android:id="@+id/search" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginHorizontal="8dp"/>
-    <TextView android:id="@+id/tv_count" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="16dp" android:textSize="12sp" android:textColor="?attr/colorOnSurfaceVariant"/>
-    <FrameLayout android:layout_width="match_parent" android:layout_height="match_parent">
-        <androidx.recyclerview.widget.RecyclerView android:id="@+id/rv" android:layout_width="match_parent" android:layout_height="match_parent" android:paddingBottom="72dp" android:clipToPadding="false"/>
-        <ProgressBar android:id="@+id/progress" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center" android:visibility="gone"/>
-        <TextView android:id="@+id/tv_empty" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center" android:text="Aucun contact" android:visibility="gone"/>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="?android:attr/colorBackground">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/space_m"
+        android:layout_marginTop="@dimen/space_l"
+        android:layout_marginBottom="@dimen/space_s"
+        android:text="@string/tab_contacts"
+        style="@style/Text.App.PageTitle"/>
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/space_m"
+        app:cardElevation="0dp"
+        app:cardBackgroundColor="?attr/colorSurfaceVariant"
+        app:cardCornerRadius="@dimen/radius_l"
+        app:strokeWidth="0dp">
+        <androidx.appcompat.widget.SearchView
+            android:id="@+id/search"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            app:queryHint="@string/search_contacts"
+            app:iconifiedByDefault="false"
+            app:searchIcon="@drawable/ic_search"/>
+    </com.google.android.material.card.MaterialCardView>
+
+    <TextView
+        android:id="@+id/tv_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/space_m"
+        android:layout_marginTop="@dimen/space_s"
+        android:textAppearance="?attr/textAppearanceLabelMedium"
+        android:textColor="?attr/colorOnSurfaceVariant"/>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingHorizontal="@dimen/space_s"
+            android:paddingTop="@dimen/space_xs"
+            android:paddingBottom="@dimen/space_s"
+            android:clipToPadding="false"
+            android:layoutAnimation="@anim/layout_animation_slide_up"/>
+        <ProgressBar
+            android:id="@+id/progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="gone"/>
+        <TextView
+            android:id="@+id/tv_empty"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/empty_contacts"
+            android:textColor="?attr/colorOnSurfaceVariant"
+            android:textAppearance="?attr/textAppearanceTitleMedium"
+            android:visibility="gone"/>
     </FrameLayout>
 </LinearLayout>

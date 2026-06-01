@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Thème appliqué (sombre) : icônes de barre d'état claires -->
+    <style name="Theme.PhoneAssistant" parent="Base.Theme.PhoneAssistant">
+        <item name="android:windowLightStatusBar">false</item>
+    </style>
+</resources>

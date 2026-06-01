@@ -17,8 +17,8 @@
         <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="Note sur ce contact" style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
             <com.google.android.material.textfield.TextInputEditText android:id="@+id/et_note" android:layout_width="match_parent" android:layout_height="wrap_content" android:minLines="3" android:inputType="textMultiLine"/>
         </com.google.android.material.textfield.TextInputLayout>
-        <com.google.android.material.button.MaterialButton android:id="@+id/btn_save_note" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:layout_marginBottom="16dp" android:text="Sauvegarder la note"/>
-        <com.google.android.material.button.MaterialButton android:id="@+id/btn_fav" style="@style/Widget.Material3.Button.OutlinedButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Ajouter aux favoris" android:layout_marginBottom="8dp"/>
-        <com.google.android.material.button.MaterialButton android:id="@+id/btn_block" style="@style/Widget.Material3.Button.OutlinedButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Bloquer ce numero"/>
+        <com.google.android.material.button.MaterialButton android:id="@+id/btn_save_note" style="@style/Widget.Material3.Button.TonalButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:layout_marginBottom="16dp" android:text="@string/save_note"/>
+        <com.google.android.material.button.MaterialButton android:id="@+id/btn_fav" style="@style/Widget.Material3.Button.OutlinedButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/add_favorite" android:layout_marginBottom="8dp" app:icon="@drawable/ic_star_outline" app:iconGravity="textStart"/>
+        <com.google.android.material.button.MaterialButton android:id="@+id/btn_block" style="@style/Widget.Material3.Button.OutlinedButton" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/block_number" app:icon="@drawable/ic_block" app:iconGravity="textStart"/>
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>

@@ -1,19 +1,111 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <style name="Theme.PhoneAssistant" parent="Theme.Material3.DayNight.NoActionBar">
-        <item name="colorPrimary">#4CAF50</item>
-        <item name="colorOnPrimary">@android:color/white</item>
-        <item name="colorPrimaryContainer">#C8E6C9</item>
-        <item name="colorSecondary">#2196F3</item>
-        <item name="colorError">#F44336</item>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- ── Thème de base partagé (couleurs swappées via values-night/colors) ─ -->
+    <style name="Base.Theme.PhoneAssistant" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Couleurs -->
+        <item name="colorPrimary">@color/brand_primary</item>
+        <item name="colorOnPrimary">@color/on_primary</item>
+        <item name="colorPrimaryContainer">@color/primary_container</item>
+        <item name="colorOnPrimaryContainer">@color/on_primary_container</item>
+        <item name="colorSecondary">@color/secondary</item>
+        <item name="colorOnSecondary">@color/on_secondary</item>
+        <item name="colorSecondaryContainer">@color/secondary_container</item>
+        <item name="colorOnSecondaryContainer">@color/on_secondary_container</item>
+        <item name="android:colorBackground">@color/background</item>
+        <item name="colorOnBackground">@color/on_background</item>
+        <item name="colorSurface">@color/surface</item>
+        <item name="colorOnSurface">@color/on_surface</item>
+        <item name="colorSurfaceVariant">@color/surface_variant</item>
+        <item name="colorOnSurfaceVariant">@color/on_surface_variant</item>
+        <item name="colorSurfaceContainer">@color/surface_container</item>
+        <item name="colorSurfaceContainerHigh">@color/surface_container_high</item>
+        <item name="colorOutline">@color/outline</item>
+        <item name="colorOutlineVariant">@color/outline_variant</item>
+        <item name="colorError">@color/error</item>
+        <item name="colorOnError">@color/on_error</item>
+
+        <!-- Barres système transparentes (One UI : edge-to-edge sobre) -->
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">?attr/colorSurface</item>
+
+        <!-- Formes arrondies généreuses (One UI) -->
+        <item name="shapeAppearanceCornerSmall">@style/Shape.App.Small</item>
+        <item name="shapeAppearanceCornerMedium">@style/Shape.App.Medium</item>
+        <item name="shapeAppearanceCornerLarge">@style/Shape.App.Large</item>
+
+        <!-- Typographie -->
+        <item name="textAppearanceHeadlineMedium">@style/Text.App.Headline</item>
+        <item name="textAppearanceTitleLarge">@style/Text.App.Title</item>
     </style>
-    <style name="DialBtn" parent="Widget.Material3.Button.TextButton">
+
+    <!-- Thème appliqué (clair) : icônes de barre d'état foncées -->
+    <style name="Theme.PhoneAssistant" parent="Base.Theme.PhoneAssistant">
+        <item name="android:windowLightStatusBar">true</item>
+    </style>
+
+    <!-- ── Formes ─────────────────────────────────────────────────────────── -->
+    <style name="Shape.App.Small" parent="ShapeAppearance.Material3.Corner.Small">
+        <item name="cornerSize">@dimen/radius_s</item>
+    </style>
+    <style name="Shape.App.Medium" parent="ShapeAppearance.Material3.Corner.Medium">
+        <item name="cornerSize">@dimen/radius_m</item>
+    </style>
+    <style name="Shape.App.Large" parent="ShapeAppearance.Material3.Corner.Large">
+        <item name="cornerSize">@dimen/radius_l</item>
+    </style>
+
+    <!-- ── Typographie (titres larges One UI) ────────────────────────────── -->
+    <style name="Text.App.Headline" parent="TextAppearance.Material3.HeadlineMedium">
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">30sp</item>
+        <item name="android:letterSpacing">-0.01</item>
+    </style>
+    <style name="Text.App.Title" parent="TextAppearance.Material3.TitleLarge">
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <!-- En-tête de page (grand titre One UI) -->
+    <style name="Text.App.PageTitle" parent="TextAppearance.Material3.HeadlineMedium">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">28sp</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
+        <item name="android:letterSpacing">-0.01</item>
+    </style>
+
+    <!-- ── Carte de liste (ombre légère) ─────────────────────────────────── -->
+    <style name="Card.App.ListItem" parent="Widget.Material3.CardView.Elevated">
+        <item name="cardElevation">@dimen/card_elevation</item>
+        <item name="cardCornerRadius">@dimen/radius_m</item>
+        <item name="cardBackgroundColor">?attr/colorSurface</item>
+        <item name="contentPadding">0dp</item>
+    </style>
+
+    <!-- ── Touche du clavier (conteneur : chiffre + lettres) ─────────────── -->
+    <style name="DialKey">
         <item name="android:layout_width">0dp</item>
-        <item name="android:layout_height">68dp</item>
+        <item name="android:layout_height">@dimen/dial_button_size</item>
         <item name="android:layout_columnWeight">1</item>
         <item name="android:layout_rowWeight">1</item>
-        <item name="android:textSize">22sp</item>
+        <item name="android:layout_margin">@dimen/space_xs</item>
+        <item name="android:orientation">vertical</item>
         <item name="android:gravity">center</item>
-        <item name="android:layout_margin">2dp</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+        <item name="android:background">@drawable/dial_key_ripple</item>
+        <item name="android:stateListAnimator">@animator/dial_key_press</item>
+    </style>
+    <style name="DialKeyDigit" parent="">
+        <item name="android:textSize">28sp</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:includeFontPadding">false</item>
+    </style>
+    <style name="DialKeyLetters" parent="">
+        <item name="android:textSize">10sp</item>
+        <item name="android:textColor">?attr/colorOnSurfaceVariant</item>
+        <item name="android:letterSpacing">0.15</item>
+        <item name="android:includeFontPadding">false</item>
     </style>
 </resources>

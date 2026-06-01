@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.chip.Chip
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.phoneassistant.MainActivity
+import com.phoneassistant.R
 import com.phoneassistant.data.AppStorage
 import com.phoneassistant.data.CallerIdRepo
 import com.phoneassistant.data.Contact
@@ -26,6 +27,7 @@ import com.phoneassistant.data.ContactsRepo
 import com.phoneassistant.databinding.FragmentContactsBinding
 import com.phoneassistant.databinding.FragmentDetailBinding
 import com.phoneassistant.databinding.ItemContactBinding
+import com.phoneassistant.ui.Avatars
 import kotlinx.coroutines.launch
 
 class ContactsViewModel(app: Application) : AndroidViewModel(app) {
@@ -45,8 +47,6 @@ class ContactsViewModel(app: Application) : AndroidViewModel(app) {
     }
 }
 
-private val palette = listOf(0xFF1976D2,0xFF388E3C,0xFFD32F2F,0xFF7B1FA2,0xFFF57C00,0xFF0288D1,0xFF00796B).map{it.toInt()}
-
 class ContactsAdapter(
     private val onCall: (Contact) -> Unit,
     private val onClick: (Contact) -> Unit
@@ -57,9 +57,8 @@ class ContactsAdapter(
     inner class VH(private val b: ItemContactBinding) : RecyclerView.ViewHolder(b.root) {
         fun bind(c: Contact) {
             b.tvName.text = c.name
-            b.tvNumber.text = c.phones.firstOrNull()?.let { "${it.number} - ${it.type}" } ?: ""
-            b.tvInitials.text = c.name.split(" ").mapNotNull { it.firstOrNull()?.toString() }.take(2).joinToString("").uppercase()
-            b.avatarBg.setBackgroundColor(palette[(c.name.firstOrNull()?.code ?: 0) % palette.size])
+            b.tvNumber.text = c.phones.firstOrNull()?.let { "${it.number} • ${it.type}" } ?: ""
+            Avatars.bind(b.avatarBg, b.tvInitials, c.name)
             b.ivStar.visibility = if (c.isFavorite) View.VISIBLE else View.GONE
             b.btnCall.setOnClickListener { onCall(c) }
             b.root.setOnClickListener { onClick(c) }
@@ -83,7 +82,14 @@ class ContactsFragment : Fragment() {
             onCall = { c -> c.phones.firstOrNull()?.let { (activity as? MainActivity)?.call(it.number) } },
             onClick = { c ->
                 ContactDetailFragment().apply { arguments = Bundle().apply { putLong("id", c.id) } }
-                    .also { parentFragmentManager.beginTransaction().replace(id, it).addToBackStack(null).commit() }
+                    .also {
+                        parentFragmentManager.beginTransaction()
+                            .setCustomAnimations(
+                                R.anim.slide_in_right, R.anim.slide_out_left,
+                                R.anim.slide_in_left, R.anim.slide_out_right
+                            )
+                            .replace(id, it).addToBackStack(null).commit()
+                    }
             }
         )
         b.rv.layoutManager = LinearLayoutManager(requireContext())
@@ -130,7 +136,7 @@ class ContactDetailFragment : Fragment() {
         val id = arguments?.getLong("id") ?: return; vm.load(id)
         vm.contact.observe(viewLifecycleOwner) { c -> c ?: return@observe
             b.tvName.text = c.name
-            b.tvInitials.text = c.name.split(" ").mapNotNull{it.firstOrNull()?.toString()}.take(2).joinToString("").uppercase()
+            Avatars.bind(b.avatarBg, b.tvInitials, c.name)
             b.chipGroup.removeAllViews()
             c.phones.forEach { p -> b.chipGroup.addView(Chip(requireContext()).apply { text="${p.number} (${p.type})"; setOnClickListener{(activity as? MainActivity)?.call(p.number)} }) }
         }

@@ -1,25 +1,133 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" android:background="?attr/colorSurface">
-    <TextView android:id="@+id/tv_number" android:layout_width="match_parent" android:layout_height="80dp" android:gravity="center" android:textSize="32sp" android:textColor="?attr/colorOnSurface" android:hint="Entrer un numero" android:paddingHorizontal="24dp"/>
-    <androidx.recyclerview.widget.RecyclerView android:id="@+id/rv_suggestions" android:layout_width="match_parent" android:layout_height="wrap_content" android:visibility="gone"/>
-    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="?attr/colorOutlineVariant"/>
-    <GridLayout android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" android:columnCount="3" android:rowCount="4" android:padding="8dp">
-        <com.google.android.material.button.MaterialButton android:id="@+id/btn1" style="@style/DialBtn" android:text="1"/>
-        <com.google.android.material.button.MaterialButton android:id="@+id/btn2" style="@style/DialBtn" android:text="2"/>
-        <com.google.android.material.button.MaterialButton android:id="@+id/btn3" style="@style/DialBtn" android:text="3"/>
-        <com.google.android.material.button.MaterialButton android:id="@+id/btn4" style="@style/DialBtn" android:text="4"/>
-        <com.google.android.material.button.MaterialButton android:id="@+id/btn5" style="@style/DialBtn" android:text="5"/>
-        <com.google.android.material.button.MaterialButton android:id="@+id/btn6" style="@style/DialBtn" android:text="6"/>
-        <com.google.android.material.button.MaterialButton android:id="@+id/btn7" style="@style/DialBtn" android:text="7"/>
-        <com.google.android.material.button.MaterialButton android:id="@+id/btn8" style="@style/DialBtn" android:text="8"/>
-        <com.google.android.material.button.MaterialButton android:id="@+id/btn9" style="@style/DialBtn" android:text="9"/>
-        <com.google.android.material.button.MaterialButton android:id="@+id/btn_star" style="@style/DialBtn" android:text="*"/>
-        <com.google.android.material.button.MaterialButton android:id="@+id/btn0" style="@style/DialBtn" android:text="0"/>
-        <com.google.android.material.button.MaterialButton android:id="@+id/btn_hash" style="@style/DialBtn" android:text="#"/>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="?android:attr/colorBackground">
+
+    <TextView
+        android:id="@+id/tv_number"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.6"
+        android:gravity="center"
+        android:textSize="36sp"
+        android:textColor="?attr/colorOnSurface"
+        android:fontFamily="sans-serif-light"
+        android:hint="@string/dial_hint"
+        android:textColorHint="?attr/colorOnSurfaceVariant"
+        android:paddingHorizontal="@dimen/space_l"
+        android:maxLines="1"
+        android:ellipsize="start"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_suggestions"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="@dimen/space_s"
+        android:clipToPadding="false"
+        android:visibility="gone"/>
+
+    <GridLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:columnCount="3"
+        android:rowCount="4"
+        android:paddingHorizontal="@dimen/space_l"
+        android:paddingVertical="@dimen/space_s">
+
+        <LinearLayout android:id="@+id/btn1" style="@style/DialKey">
+            <TextView style="@style/DialKeyDigit" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="1"/>
+            <TextView style="@style/DialKeyLetters" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text=" "/>
+        </LinearLayout>
+        <LinearLayout android:id="@+id/btn2" style="@style/DialKey">
+            <TextView style="@style/DialKeyDigit" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="2"/>
+            <TextView style="@style/DialKeyLetters" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="ABC"/>
+        </LinearLayout>
+        <LinearLayout android:id="@+id/btn3" style="@style/DialKey">
+            <TextView style="@style/DialKeyDigit" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="3"/>
+            <TextView style="@style/DialKeyLetters" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="DEF"/>
+        </LinearLayout>
+        <LinearLayout android:id="@+id/btn4" style="@style/DialKey">
+            <TextView style="@style/DialKeyDigit" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="4"/>
+            <TextView style="@style/DialKeyLetters" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="GHI"/>
+        </LinearLayout>
+        <LinearLayout android:id="@+id/btn5" style="@style/DialKey">
+            <TextView style="@style/DialKeyDigit" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="5"/>
+            <TextView style="@style/DialKeyLetters" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="JKL"/>
+        </LinearLayout>
+        <LinearLayout android:id="@+id/btn6" style="@style/DialKey">
+            <TextView style="@style/DialKeyDigit" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="6"/>
+            <TextView style="@style/DialKeyLetters" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="MNO"/>
+        </LinearLayout>
+        <LinearLayout android:id="@+id/btn7" style="@style/DialKey">
+            <TextView style="@style/DialKeyDigit" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="7"/>
+            <TextView style="@style/DialKeyLetters" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="PQRS"/>
+        </LinearLayout>
+        <LinearLayout android:id="@+id/btn8" style="@style/DialKey">
+            <TextView style="@style/DialKeyDigit" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="8"/>
+            <TextView style="@style/DialKeyLetters" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="TUV"/>
+        </LinearLayout>
+        <LinearLayout android:id="@+id/btn9" style="@style/DialKey">
+            <TextView style="@style/DialKeyDigit" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="9"/>
+            <TextView style="@style/DialKeyLetters" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="WXYZ"/>
+        </LinearLayout>
+        <LinearLayout android:id="@+id/btn_star" style="@style/DialKey">
+            <TextView style="@style/DialKeyDigit" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="*"/>
+        </LinearLayout>
+        <LinearLayout android:id="@+id/btn0" style="@style/DialKey">
+            <TextView style="@style/DialKeyDigit" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="0"/>
+            <TextView style="@style/DialKeyLetters" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="+"/>
+        </LinearLayout>
+        <LinearLayout android:id="@+id/btn_hash" style="@style/DialKey">
+            <TextView style="@style/DialKeyDigit" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="#"/>
+        </LinearLayout>
     </GridLayout>
-    <LinearLayout android:layout_width="match_parent" android:layout_height="88dp" android:orientation="horizontal" android:gravity="center" android:paddingBottom="8dp">
-        <com.google.android.material.button.MaterialButton android:id="@+id/btn_sms" style="@style/Widget.Material3.Button.IconButton" android:layout_width="56dp" android:layout_height="56dp" android:visibility="gone" android:text="SMS"/>
-        <com.google.android.material.floatingactionbutton.FloatingActionButton android:id="@+id/btn_call" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginHorizontal="32dp" android:backgroundTint="#4CAF50" app:srcCompat="@android:drawable/ic_menu_call"/>
-        <com.google.android.material.button.MaterialButton android:id="@+id/btn_del" style="@style/Widget.Material3.Button.IconButton" android:layout_width="56dp" android:layout_height="56dp" android:visibility="invisible" android:text="Del"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="@dimen/space_xl"
+        android:paddingBottom="@dimen/space_m"
+        android:paddingTop="@dimen/space_s">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_sms"
+            style="@style/Widget.Material3.Button.IconButton.Filled.Tonal"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:visibility="invisible"
+            android:contentDescription="@string/action_sms"
+            app:icon="@drawable/ic_message"/>
+
+        <Space android:layout_width="0dp" android:layout_height="0dp" android:layout_weight="1"/>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/btn_call"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/action_call"
+            app:backgroundTint="@color/call_incoming"
+            app:tint="@android:color/white"
+            app:elevation="2dp"
+            app:fabCustomSize="@dimen/fab_call_size"
+            app:maxImageSize="30dp"
+            app:srcCompat="@drawable/ic_call"/>
+
+        <Space android:layout_width="0dp" android:layout_height="0dp" android:layout_weight="1"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_del"
+            style="@style/Widget.Material3.Button.IconButton"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:visibility="invisible"
+            android:contentDescription="@string/action_backspace"
+            app:icon="@drawable/ic_backspace"
+            app:iconTint="?attr/colorOnSurfaceVariant"/>
     </LinearLayout>
 </LinearLayout>

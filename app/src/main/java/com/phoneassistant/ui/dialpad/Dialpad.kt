@@ -12,6 +12,7 @@ import com.phoneassistant.data.Contact
 import com.phoneassistant.data.ContactsRepo
 import com.phoneassistant.databinding.FragmentDialpadBinding
 import com.phoneassistant.databinding.ItemSuggestionBinding
+import com.phoneassistant.ui.Avatars
 import kotlinx.coroutines.launch
 
 class DialpadViewModel(app: Application) : AndroidViewModel(app) {
@@ -56,7 +57,7 @@ class SuggestionsAdapter(private val onClick: (Contact) -> Unit)
             b.tvName.text = c.name
             b.tvNumber.text = c.phones.firstOrNull()?.number ?: ""
             b.tvType.text = c.phones.firstOrNull()?.type ?: ""
-            b.tvInitials.text = c.name.split(" ").mapNotNull { it.firstOrNull()?.toString() }.take(2).joinToString("").uppercase()
+            Avatars.bind(b.avatarBg, b.tvInitials, c.name)
             b.root.setOnClickListener { onClick(c) }
         }
     }
@@ -78,11 +79,11 @@ class DialpadFragment : Fragment() {
         mapOf(b.btn0 to "0",b.btn1 to "1",b.btn2 to "2",b.btn3 to "3",b.btn4 to "4",
               b.btn5 to "5",b.btn6 to "6",b.btn7 to "7",b.btn8 to "8",b.btn9 to "9",
               b.btnStar to "*",b.btnHash to "#").forEach { (btn, d) ->
-            btn.setOnClickListener { vm.type(d) }
-            if (d == "0") btn.setOnLongClickListener { vm.type("+"); true }
+            btn.setOnClickListener { it.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP); vm.type(d) }
+            if (d == "0") btn.setOnLongClickListener { it.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS); vm.type("+"); true }
         }
-        b.btnDel.setOnClickListener { vm.back() }
-        b.btnDel.setOnLongClickListener { vm.clear(); true }
+        b.btnDel.setOnClickListener { it.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP); vm.back() }
+        b.btnDel.setOnLongClickListener { it.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS); vm.clear(); true }
         b.btnCall.setOnClickListener { vm.number.value?.takeIf { it.isNotBlank() }?.let { (activity as? MainActivity)?.call(it) } }
         b.btnSms.setOnClickListener  { vm.number.value?.takeIf { it.isNotBlank() }?.let { (activity as? MainActivity)?.sms(it) } }
         vm.number.observe(viewLifecycleOwner) { n ->
