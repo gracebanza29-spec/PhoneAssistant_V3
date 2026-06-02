@@ -37,9 +37,6 @@
         app:itemIconSize="0dp"
         app:labelVisibilityMode="labeled"
         app:itemTextColor="@color/bottom_nav_item"
-        app:itemActiveIndicatorHeight="3dp"
-        app:itemActiveIndicatorWidth="48dp"
-        app:itemActiveIndicatorStyle="@style/Widget.App.BottomNav.ActiveIndicator"
         app:menu="@menu/bottom_nav"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
