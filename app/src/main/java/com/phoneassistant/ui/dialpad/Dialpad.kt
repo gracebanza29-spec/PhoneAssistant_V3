@@ -23,7 +23,7 @@ class DialpadViewModel(app: Application) : AndroidViewModel(app) {
     val suggestions: LiveData<List<Contact>> = _suggestions
     private val T9 = mapOf('2' to "abcABC",'3' to "defDEF",'4' to "ghiGHI",'5' to "jklJKL",
         '6' to "mnoMNO",'7' to "pqrsPQRS",'8' to "tuvTUV",'9' to "wxyzWXYZ")
-    init { viewModelScope.launch { all = repo.getAll() } }
+    init { viewModelScope.launch { try { all = repo.getAll() } catch (_: Exception) {} } }
     fun type(d: String) { number.value = (number.value ?: "") + d; search() }
     fun back()          { number.value = number.value?.dropLast(1) ?: ""; search() }
     fun clear()         { number.value = ""; _suggestions.value = emptyList() }

@@ -37,7 +37,9 @@ class ContactsViewModel(app: Application) : AndroidViewModel(app) {
     val list: LiveData<List<Contact>> = _list
     val loading = MutableLiveData(false)
     fun load() = viewModelScope.launch {
-        loading.value = true; all = repo.getAll(); _list.value = all; loading.value = false
+        loading.value = true
+        try { all = repo.getAll(); _list.value = all } catch (_: Exception) { _list.value = emptyList() }
+        finally { loading.value = false }
     }
     fun search(q: String) {
         _list.value = if (q.isBlank()) all else {
@@ -114,7 +116,7 @@ class ContactDetailViewModel(app: Application) : AndroidViewModel(app) {
     val contact = MutableLiveData<Contact?>(); val callerInfo = MutableLiveData<String?>()
     val note = MutableLiveData(""); val isFav = MutableLiveData(false); val isBlocked = MutableLiveData(false)
     fun load(id: Long) = viewModelScope.launch {
-        val c = repo.getAll().find { it.id == id }; contact.value = c
+        val c = try { repo.getAll().find { it.id == id } } catch (_: Exception) { null }; contact.value = c
         note.value = storage.getNote(id); isFav.value = storage.isFavorite(id)
         c?.phones?.firstOrNull()?.let { p ->
             isBlocked.value = storage.isBlocked(p.number)
