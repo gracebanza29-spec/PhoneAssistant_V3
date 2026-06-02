@@ -6,21 +6,25 @@
     android:orientation="vertical"
     android:background="?android:attr/colorBackground">
 
+    <!-- Affichage du numéro : hauteur fixe + texte auto-réduit -->
     <TextView
         android:id="@+id/tv_number"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.6"
+        android:layout_height="80dp"
         android:gravity="center"
-        android:textSize="36sp"
+        android:maxLines="1"
+        android:autoSizeTextType="uniform"
+        android:autoSizeMinTextSize="18sp"
+        android:autoSizeMaxTextSize="40sp"
         android:textColor="?attr/colorOnSurface"
         android:fontFamily="sans-serif-light"
         android:hint="@string/dial_hint"
         android:textColorHint="?attr/colorOnSurfaceVariant"
         android:paddingHorizontal="@dimen/space_l"
-        android:maxLines="1"
-        android:ellipsize="start"/>
+        android:paddingTop="@dimen/space_m"
+        android:paddingBottom="@dimen/space_s"/>
 
+    <!-- Suggestions de contacts -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_suggestions"
         android:layout_width="match_parent"
@@ -29,63 +33,100 @@
         android:clipToPadding="false"
         android:visibility="gone"/>
 
-    <GridLayout
+    <!--
+        Pavé numérique : 4 rangées × 3 touches
+        LinearLayouts imbriqués (vertical > horizontal) pour une distribution
+        de hauteur fiable et des clics garantis sur toutes les tailles d'écran.
+    -->
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:columnCount="3"
-        android:rowCount="4"
-        android:paddingHorizontal="@dimen/space_l"
-        android:paddingVertical="@dimen/space_s">
+        android:orientation="vertical"
+        android:paddingHorizontal="@dimen/space_m"
+        android:paddingTop="@dimen/space_xs">
 
-        <LinearLayout android:id="@+id/btn1" style="@style/DialKey">
-            <TextView style="@style/DialKeyDigit" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="1"/>
-            <TextView style="@style/DialKeyLetters" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text=" "/>
+        <!-- Rangée 1 : 1  2  3 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+            <LinearLayout android:id="@+id/btn1" style="@style/DialKey">
+                <TextView style="@style/DialKeyDigit" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="1"/>
+                <TextView style="@style/DialKeyLetters" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text=" "/>
+            </LinearLayout>
+            <LinearLayout android:id="@+id/btn2" style="@style/DialKey">
+                <TextView style="@style/DialKeyDigit" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="2"/>
+                <TextView style="@style/DialKeyLetters" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="ABC"/>
+            </LinearLayout>
+            <LinearLayout android:id="@+id/btn3" style="@style/DialKey">
+                <TextView style="@style/DialKeyDigit" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="3"/>
+                <TextView style="@style/DialKeyLetters" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="DEF"/>
+            </LinearLayout>
         </LinearLayout>
-        <LinearLayout android:id="@+id/btn2" style="@style/DialKey">
-            <TextView style="@style/DialKeyDigit" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="2"/>
-            <TextView style="@style/DialKeyLetters" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="ABC"/>
-        </LinearLayout>
-        <LinearLayout android:id="@+id/btn3" style="@style/DialKey">
-            <TextView style="@style/DialKeyDigit" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="3"/>
-            <TextView style="@style/DialKeyLetters" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="DEF"/>
-        </LinearLayout>
-        <LinearLayout android:id="@+id/btn4" style="@style/DialKey">
-            <TextView style="@style/DialKeyDigit" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="4"/>
-            <TextView style="@style/DialKeyLetters" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="GHI"/>
-        </LinearLayout>
-        <LinearLayout android:id="@+id/btn5" style="@style/DialKey">
-            <TextView style="@style/DialKeyDigit" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="5"/>
-            <TextView style="@style/DialKeyLetters" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="JKL"/>
-        </LinearLayout>
-        <LinearLayout android:id="@+id/btn6" style="@style/DialKey">
-            <TextView style="@style/DialKeyDigit" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="6"/>
-            <TextView style="@style/DialKeyLetters" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="MNO"/>
-        </LinearLayout>
-        <LinearLayout android:id="@+id/btn7" style="@style/DialKey">
-            <TextView style="@style/DialKeyDigit" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="7"/>
-            <TextView style="@style/DialKeyLetters" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="PQRS"/>
-        </LinearLayout>
-        <LinearLayout android:id="@+id/btn8" style="@style/DialKey">
-            <TextView style="@style/DialKeyDigit" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="8"/>
-            <TextView style="@style/DialKeyLetters" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="TUV"/>
-        </LinearLayout>
-        <LinearLayout android:id="@+id/btn9" style="@style/DialKey">
-            <TextView style="@style/DialKeyDigit" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="9"/>
-            <TextView style="@style/DialKeyLetters" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="WXYZ"/>
-        </LinearLayout>
-        <LinearLayout android:id="@+id/btn_star" style="@style/DialKey">
-            <TextView style="@style/DialKeyDigit" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="*"/>
-        </LinearLayout>
-        <LinearLayout android:id="@+id/btn0" style="@style/DialKey">
-            <TextView style="@style/DialKeyDigit" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="0"/>
-            <TextView style="@style/DialKeyLetters" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="+"/>
-        </LinearLayout>
-        <LinearLayout android:id="@+id/btn_hash" style="@style/DialKey">
-            <TextView style="@style/DialKeyDigit" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="#"/>
-        </LinearLayout>
-    </GridLayout>
 
+        <!-- Rangée 2 : 4  5  6 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+            <LinearLayout android:id="@+id/btn4" style="@style/DialKey">
+                <TextView style="@style/DialKeyDigit" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="4"/>
+                <TextView style="@style/DialKeyLetters" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="GHI"/>
+            </LinearLayout>
+            <LinearLayout android:id="@+id/btn5" style="@style/DialKey">
+                <TextView style="@style/DialKeyDigit" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="5"/>
+                <TextView style="@style/DialKeyLetters" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="JKL"/>
+            </LinearLayout>
+            <LinearLayout android:id="@+id/btn6" style="@style/DialKey">
+                <TextView style="@style/DialKeyDigit" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="6"/>
+                <TextView style="@style/DialKeyLetters" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="MNO"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Rangée 3 : 7  8  9 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+            <LinearLayout android:id="@+id/btn7" style="@style/DialKey">
+                <TextView style="@style/DialKeyDigit" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="7"/>
+                <TextView style="@style/DialKeyLetters" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="PQRS"/>
+            </LinearLayout>
+            <LinearLayout android:id="@+id/btn8" style="@style/DialKey">
+                <TextView style="@style/DialKeyDigit" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="8"/>
+                <TextView style="@style/DialKeyLetters" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="TUV"/>
+            </LinearLayout>
+            <LinearLayout android:id="@+id/btn9" style="@style/DialKey">
+                <TextView style="@style/DialKeyDigit" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="9"/>
+                <TextView style="@style/DialKeyLetters" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="WXYZ"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Rangée 4 : *  0  # -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+            <LinearLayout android:id="@+id/btn_star" style="@style/DialKey">
+                <TextView style="@style/DialKeyDigit" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="*"/>
+            </LinearLayout>
+            <LinearLayout android:id="@+id/btn0" style="@style/DialKey">
+                <TextView style="@style/DialKeyDigit" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="0"/>
+                <TextView style="@style/DialKeyLetters" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="+"/>
+            </LinearLayout>
+            <LinearLayout android:id="@+id/btn_hash" style="@style/DialKey">
+                <TextView style="@style/DialKeyDigit" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="#"/>
+            </LinearLayout>
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!-- Barre d'actions : SMS | Appel | Effacer -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -95,6 +136,7 @@
         android:paddingBottom="@dimen/space_m"
         android:paddingTop="@dimen/space_s">
 
+        <!-- INVISIBLE (pas GONE) pour éviter le décalage de layout au premier chiffre -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_sms"
             style="@style/Widget.Material3.Button.IconButton.Filled.Tonal"

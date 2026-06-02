@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Fond de touche pavé numérique One UI :
+    - Ovale gris rempli en état normal (visible même sans appui)
+    - Ripple plus sombre au press
+    - Masque ovale pour confiner le ripple dans la forme
+-->
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    android:color="@color/dial_key_pressed">
+    <!-- Masque ovale : confine le ripple -->
+    <item android:id="@android:id/mask">
+        <shape android:shape="oval">
+            <solid android:color="@android:color/white"/>
+        </shape>
+    </item>
+    <!-- Fond gris permanent (One UI style) -->
+    <item>
+        <shape android:shape="oval">
+            <solid android:color="@color/dial_key_bg"/>
+        </shape>
+    </item>
+</ripple>

@@ -82,18 +82,17 @@
         <item name="contentPadding">0dp</item>
     </style>
 
-    <!-- ── Touche du clavier (conteneur : chiffre + lettres) ─────────────── -->
+    <!-- ── Touche du clavier (One UI : cercle gris centré) ──────────────── -->
     <style name="DialKey">
         <item name="android:layout_width">0dp</item>
-        <item name="android:layout_height">@dimen/dial_button_size</item>
-        <item name="android:layout_columnWeight">1</item>
-        <item name="android:layout_rowWeight">1</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_weight">1</item>
         <item name="android:layout_margin">@dimen/space_xs</item>
         <item name="android:orientation">vertical</item>
         <item name="android:gravity">center</item>
         <item name="android:clickable">true</item>
         <item name="android:focusable">true</item>
-        <item name="android:background">@drawable/dial_key_ripple</item>
+        <item name="android:background">@drawable/dial_key_bg</item>
         <item name="android:stateListAnimator">@animator/dial_key_press</item>
     </style>
     <style name="DialKeyDigit" parent="">

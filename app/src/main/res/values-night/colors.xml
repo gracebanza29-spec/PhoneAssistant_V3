@@ -38,6 +38,10 @@
     <color name="call_missed_container">#3D1416</color>
     <color name="call_blocked_container">#26282B</color>
 
+    <!-- ── Pavé numérique — fond de touche One UI sombre ───────────────── -->
+    <color name="dial_key_bg">#1E1E1E</color>
+    <color name="dial_key_pressed">#2E2E2E</color>
+
     <!-- ── Avatars — teintes plus douces pour le sombre ──────────────────── -->
     <color name="avatar_0">#5E92F3</color>
     <color name="avatar_1">#66BB6A</color>

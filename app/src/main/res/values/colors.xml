@@ -38,6 +38,10 @@
     <color name="call_missed_container">#FDE0E1</color>
     <color name="call_blocked_container">#ECEDEF</color>
 
+    <!-- ── Pavé numérique — fond de touche One UI ───────────────────────── -->
+    <color name="dial_key_bg">#EDEDED</color>
+    <color name="dial_key_pressed">#D6D6D6</color>
+
     <!-- ── Palette d'avatars (initiales sur fond coloré) ─────────────────── -->
     <color name="avatar_0">#1565C0</color>
     <color name="avatar_1">#2E7D32</color>

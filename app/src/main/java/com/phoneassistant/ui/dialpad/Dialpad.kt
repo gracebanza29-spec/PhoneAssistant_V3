@@ -69,32 +69,92 @@ class DialpadFragment : Fragment() {
     private var _b: FragmentDialpadBinding? = null
     private val b get() = _b!!
     private val vm: DialpadViewModel by viewModels()
-    override fun onCreateView(i: LayoutInflater, c: ViewGroup?, s: Bundle?): View { _b = FragmentDialpadBinding.inflate(i, c, false); return b.root }
+
+    override fun onCreateView(i: LayoutInflater, c: ViewGroup?, s: Bundle?): View {
+        _b = FragmentDialpadBinding.inflate(i, c, false); return b.root
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         arguments?.getString("prefill")?.let { vm.set(it) }
-        val adapter = SuggestionsAdapter { c -> c.phones.firstOrNull()?.let { (activity as? MainActivity)?.call(it.number) } }
+        val adapter = SuggestionsAdapter { c ->
+            c.phones.firstOrNull()?.let { (activity as? MainActivity)?.call(it.number) }
+        }
         b.rvSuggestions.layoutManager = LinearLayoutManager(requireContext())
         b.rvSuggestions.adapter = adapter
-        mapOf(b.btn0 to "0",b.btn1 to "1",b.btn2 to "2",b.btn3 to "3",b.btn4 to "4",
-              b.btn5 to "5",b.btn6 to "6",b.btn7 to "7",b.btn8 to "8",b.btn9 to "9",
-              b.btnStar to "*",b.btnHash to "#").forEach { (btn, d) ->
-            btn.setOnClickListener { it.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP); vm.type(d) }
-            if (d == "0") btn.setOnLongClickListener { it.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS); vm.type("+"); true }
+
+        // Connecte chaque touche au ViewModel + retour haptique
+        mapOf(
+            b.btn0 to "0", b.btn1 to "1", b.btn2 to "2", b.btn3 to "3", b.btn4 to "4",
+            b.btn5 to "5", b.btn6 to "6", b.btn7 to "7", b.btn8 to "8", b.btn9 to "9",
+            b.btnStar to "*", b.btnHash to "#"
+        ).forEach { (btn, d) ->
+            btn.setOnClickListener {
+                it.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
+                vm.type(d)
+            }
+            // Appui long sur 0 → insère "+"
+            if (d == "0") btn.setOnLongClickListener {
+                it.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
+                vm.type("+"); true
+            }
         }
-        b.btnDel.setOnClickListener { it.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP); vm.back() }
-        b.btnDel.setOnLongClickListener { it.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS); vm.clear(); true }
-        b.btnCall.setOnClickListener { vm.number.value?.takeIf { it.isNotBlank() }?.let { (activity as? MainActivity)?.call(it) } }
-        b.btnSms.setOnClickListener  { vm.number.value?.takeIf { it.isNotBlank() }?.let { (activity as? MainActivity)?.sms(it) } }
+
+        b.btnDel.setOnClickListener {
+            it.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP); vm.back()
+        }
+        b.btnDel.setOnLongClickListener {
+            it.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS); vm.clear(); true
+        }
+        b.btnCall.setOnClickListener {
+            // Passe le numéro brut (sans espaces de formatage) à l'appel téléphonique
+            vm.number.value?.takeIf { it.isNotBlank() }
+                ?.let { (activity as? MainActivity)?.call(it) }
+        }
+        b.btnSms.setOnClickListener {
+            vm.number.value?.takeIf { it.isNotBlank() }
+                ?.let { (activity as? MainActivity)?.sms(it) }
+        }
+
         vm.number.observe(viewLifecycleOwner) { n ->
-            b.tvNumber.text = if (n.length == 10) n.chunked(2).joinToString(" ") else n
+            b.tvNumber.text = formatNumber(n)
             b.btnDel.visibility = if (n.isNotEmpty()) View.VISIBLE else View.INVISIBLE
-            b.btnSms.visibility = if (n.isNotEmpty()) View.VISIBLE else View.GONE
+            // INVISIBLE (pas GONE) pour éviter tout décalage de layout
+            b.btnSms.visibility = if (n.isNotEmpty()) View.VISIBLE else View.INVISIBLE
         }
         vm.suggestions.observe(viewLifecycleOwner) { list ->
             adapter.submitList(list)
             b.rvSuggestions.visibility = if (list.isEmpty()) View.GONE else View.VISIBLE
         }
     }
+
+    /**
+     * Formate le numéro saisi pour l'affichage (ne change pas la valeur stockée).
+     * - International (+XXX…) : +243 81 234 5678
+     * - Local 10 chiffres (0XXXXXXXXX) : 0XX XXX XXXX
+     * - Autres longueurs : affiché tel quel (auto-resize gère le débordement)
+     */
+    private fun formatNumber(n: String): String {
+        if (n.isEmpty()) return ""
+        // Numéro international
+        if (n.startsWith("+")) {
+            val digits = n.removePrefix("+").filter { it.isDigit() }
+            return when {
+                digits.length <= 3  -> "+$digits"
+                digits.length <= 5  -> "+${digits.substring(0,3)} ${digits.substring(3)}"
+                digits.length <= 8  -> "+${digits.substring(0,3)} ${digits.substring(3,5)} ${digits.substring(5)}"
+                digits.length <= 12 -> "+${digits.substring(0,3)} ${digits.substring(3,5)} ${digits.substring(5,8)} ${digits.substring(8)}"
+                else                -> n
+            }
+        }
+        // Numéro local 10 chiffres (format Congo : 0XX XXX XXXX)
+        val digits = n.filter { it.isDigit() }
+        return when (digits.length) {
+            10   -> "${digits.substring(0,3)} ${digits.substring(3,6)} ${digits.substring(6)}"
+            9    -> "${digits.substring(0,2)} ${digits.substring(2,5)} ${digits.substring(5)}"
+            else -> n  // Saisie partielle — affichage brut, l'auto-resize gère la taille
+        }
+    }
+
     override fun onDestroyView() { super.onDestroyView(); _b = null }
 }
