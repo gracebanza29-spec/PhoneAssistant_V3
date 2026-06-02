@@ -41,6 +41,8 @@
     <string name="action_sms">Envoyer un SMS</string>
     <string name="action_delete">Supprimer</string>
     <string name="action_backspace">Effacer</string>
+    <string name="action_search">Rechercher</string>
+    <string name="action_more">Plus d\'options</string>
     <string name="action_add_contact">Ajouter aux contacts</string>
     <string name="cd_avatar">Avatar du contact</string>
     <string name="cd_favorite">Favori</string>

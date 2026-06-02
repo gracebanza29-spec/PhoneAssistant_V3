@@ -82,12 +82,11 @@
         <item name="contentPadding">0dp</item>
     </style>
 
-    <!-- ── Touche du clavier (One UI : cercle gris centré) ──────────────── -->
+    <!-- ── Touche du pavé (style One UI : transparent, chiffre grand) ───── -->
     <style name="DialKey">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">match_parent</item>
         <item name="android:layout_weight">1</item>
-        <item name="android:layout_margin">@dimen/space_xs</item>
         <item name="android:orientation">vertical</item>
         <item name="android:gravity">center</item>
         <item name="android:clickable">true</item>
@@ -95,16 +94,29 @@
         <item name="android:background">@drawable/dial_key_bg</item>
         <item name="android:stateListAnimator">@animator/dial_key_press</item>
     </style>
+    <!-- Chiffre : grand et léger, comme One UI (44sp sans-serif-light) -->
     <style name="DialKeyDigit" parent="">
-        <item name="android:textSize">28sp</item>
+        <item name="android:textSize">44sp</item>
         <item name="android:textColor">?attr/colorOnSurface</item>
-        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:fontFamily">sans-serif-light</item>
         <item name="android:includeFontPadding">false</item>
     </style>
+    <!-- Lettres : petites, espacées, grises -->
     <style name="DialKeyLetters" parent="">
         <item name="android:textSize">10sp</item>
         <item name="android:textColor">?attr/colorOnSurfaceVariant</item>
-        <item name="android:letterSpacing">0.15</item>
+        <item name="android:letterSpacing">0.12</item>
         <item name="android:includeFontPadding">false</item>
+    </style>
+
+    <!-- ── Barre de navigation : texte seul, style onglets One UI ────────── -->
+    <!-- Indicateur actif réduit à une ligne fine sous l'onglet -->
+    <style name="Widget.App.BottomNav.ActiveIndicator" parent="">
+        <item name="android:color">?attr/colorPrimary</item>
+        <item name="shapeAppearance">@style/Shape.App.BottomNavIndicator</item>
+    </style>
+    <style name="Shape.App.BottomNavIndicator" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">2dp</item>
     </style>
 </resources>
