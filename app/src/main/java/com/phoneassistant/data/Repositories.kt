@@ -100,37 +100,54 @@ class CallLogRepo(private val ctx: Context) {
 
     suspend fun getAll(limit: Int = 200): List<CallEntry> = withContext(Dispatchers.IO) {
         val list = mutableListOf<CallEntry>()
-        ctx.contentResolver.query(
-            CallLog.Calls.CONTENT_URI,
-            arrayOf(CallLog.Calls._ID, CallLog.Calls.NUMBER, CallLog.Calls.CACHED_NAME,
-                    CallLog.Calls.TYPE, CallLog.Calls.DURATION, CallLog.Calls.DATE),
-            null, null, "${CallLog.Calls.DATE} DESC LIMIT $limit"
-        )?.use { c ->
-            val idC   = c.getColumnIndexOrThrow(CallLog.Calls._ID)
-            val numC  = c.getColumnIndexOrThrow(CallLog.Calls.NUMBER)
-            val nameC = c.getColumnIndexOrThrow(CallLog.Calls.CACHED_NAME)
-            val typeC = c.getColumnIndexOrThrow(CallLog.Calls.TYPE)
-            val durC  = c.getColumnIndexOrThrow(CallLog.Calls.DURATION)
-            val dateC = c.getColumnIndexOrThrow(CallLog.Calls.DATE)
-            while (c.moveToNext()) {
-                val t = when (c.getInt(typeC)) {
-                    CallLog.Calls.INCOMING_TYPE -> CallType.INCOMING
-                    CallLog.Calls.OUTGOING_TYPE -> CallType.OUTGOING
-                    CallLog.Calls.MISSED_TYPE   -> CallType.MISSED
-                    CallLog.Calls.REJECTED_TYPE -> CallType.REJECTED
-                    CallLog.Calls.BLOCKED_TYPE  -> CallType.BLOCKED
-                    else -> CallType.INCOMING
+        try {
+            // Utiliser le paramètre "limit" dans l'URI plutôt que LIMIT dans sortOrder
+            // (la clause LIMIT dans sortOrder est rejetée par certains appareils Samsung)
+            val uri = CallLog.Calls.CONTENT_URI.buildUpon()
+                .appendQueryParameter("limit", limit.toString())
+                .build()
+            ctx.contentResolver.query(
+                uri,
+                arrayOf(CallLog.Calls._ID, CallLog.Calls.NUMBER, CallLog.Calls.CACHED_NAME,
+                        CallLog.Calls.TYPE, CallLog.Calls.DURATION, CallLog.Calls.DATE),
+                null, null, "${CallLog.Calls.DATE} DESC"
+            )?.use { c ->
+                val idC   = c.getColumnIndexOrThrow(CallLog.Calls._ID)
+                val numC  = c.getColumnIndexOrThrow(CallLog.Calls.NUMBER)
+                val nameC = c.getColumnIndexOrThrow(CallLog.Calls.CACHED_NAME)
+                val typeC = c.getColumnIndexOrThrow(CallLog.Calls.TYPE)
+                val durC  = c.getColumnIndexOrThrow(CallLog.Calls.DURATION)
+                val dateC = c.getColumnIndexOrThrow(CallLog.Calls.DATE)
+                while (c.moveToNext()) {
+                    val t = when (c.getInt(typeC)) {
+                        CallLog.Calls.INCOMING_TYPE -> CallType.INCOMING
+                        CallLog.Calls.OUTGOING_TYPE -> CallType.OUTGOING
+                        CallLog.Calls.MISSED_TYPE   -> CallType.MISSED
+                        CallLog.Calls.REJECTED_TYPE -> CallType.REJECTED
+                        CallLog.Calls.BLOCKED_TYPE  -> CallType.BLOCKED
+                        else -> CallType.INCOMING
+                    }
+                    list.add(CallEntry(c.getLong(idC), c.getString(numC) ?: "",
+                        c.getString(nameC)?.takeIf { it.isNotBlank() },
+                        null, t, c.getLong(durC), c.getLong(dateC)))
                 }
-                list.add(CallEntry(c.getLong(idC), c.getString(numC) ?: "",
-                    c.getString(nameC)?.takeIf { it.isNotBlank() },
-                    null, t, c.getLong(durC), c.getLong(dateC)))
             }
+        } catch (_: SecurityException) {
+            // Permission READ_CALL_LOG non accordée — retourner liste vide
+        } catch (_: Exception) {
+            // Autre erreur (fournisseur de contenu Samsung, etc.) — retourner liste vide
         }
         list
     }
 
     suspend fun delete(id: Long) = withContext(Dispatchers.IO) {
-        ctx.contentResolver.delete(CallLog.Calls.CONTENT_URI, "${CallLog.Calls._ID}=?", arrayOf(id.toString()))
+        try {
+            ctx.contentResolver.delete(
+                CallLog.Calls.CONTENT_URI,
+                "${CallLog.Calls._ID}=?",
+                arrayOf(id.toString())
+            )
+        } catch (_: Exception) { /* Permission non accordée */ }
     }
 }
 

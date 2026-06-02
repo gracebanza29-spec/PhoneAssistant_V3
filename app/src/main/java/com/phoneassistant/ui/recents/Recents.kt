@@ -32,15 +32,24 @@ class RecentsViewModel(app: Application) : AndroidViewModel(app) {
 
     fun load() = viewModelScope.launch {
         loading.value = true
-        all = callRepo.getAll().map { e ->
-            if (e.name == null) {
-                val info = callerRepo.identify(e.number)
-                e.copy(callerInfo = info?.let { i ->
-                    listOfNotNull(i.carrier, i.lineType, i.location).joinToString(" • ").takeIf { it.isNotBlank() }
-                })
-            } else e
+        try {
+            all = callRepo.getAll().map { e ->
+                if (e.name == null) {
+                    val info = callerRepo.identify(e.number)
+                    e.copy(callerInfo = info?.let { i ->
+                        listOfNotNull(i.carrier, i.lineType, i.location)
+                            .joinToString(" • ").takeIf { it.isNotBlank() }
+                    })
+                } else e
+            }
+            apply()
+        } catch (_: Exception) {
+            // Erreur inattendue (SecurityException, fournisseur Samsung, etc.)
+            // Afficher liste vide plutôt que crasher
+            _entries.value = emptyList()
+        } finally {
+            loading.value = false
         }
-        apply(); loading.value = false
     }
 
     fun setFilter(t: CallType?) { filter = t; apply() }
