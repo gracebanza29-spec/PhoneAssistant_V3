@@ -27,10 +27,10 @@
             android:paddingVertical="@dimen/space_s"
             app:singleSelection="true"
             app:selectionRequired="true">
-            <com.google.android.material.chip.Chip android:id="@+id/chip_all"    style="@style/Widget.Material3.Chip.Filter" android:text="@string/filter_all"      android:checked="true"/>
-            <com.google.android.material.chip.Chip android:id="@+id/chip_missed" style="@style/Widget.Material3.Chip.Filter" android:text="@string/filter_missed"/>
-            <com.google.android.material.chip.Chip android:id="@+id/chip_in"     style="@style/Widget.Material3.Chip.Filter" android:text="@string/filter_incoming"/>
-            <com.google.android.material.chip.Chip android:id="@+id/chip_out"    style="@style/Widget.Material3.Chip.Filter" android:text="@string/filter_outgoing"/>
+            <com.google.android.material.chip.Chip android:id="@+id/chip_all"    style="@style/Widget.Material3.Chip.Filter" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/filter_all"      android:checked="true"/>
+            <com.google.android.material.chip.Chip android:id="@+id/chip_missed" style="@style/Widget.Material3.Chip.Filter" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/filter_missed"/>
+            <com.google.android.material.chip.Chip android:id="@+id/chip_in"     style="@style/Widget.Material3.Chip.Filter" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/filter_incoming"/>
+            <com.google.android.material.chip.Chip android:id="@+id/chip_out"    style="@style/Widget.Material3.Chip.Filter" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/filter_outgoing"/>
         </com.google.android.material.chip.ChipGroup>
     </HorizontalScrollView>
 
